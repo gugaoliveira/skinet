@@ -1,3 +1,5 @@
+using API;
+using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +12,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 builder.Services.AddDbContext<StoreContext>(x =>
 {
   x.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddTransient<IStartupFilter, MigrationStartupFilter<StoreContext>>();
 
 var app = builder.Build();
 
